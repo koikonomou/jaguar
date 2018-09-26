@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <node pkg="robot_localization" type="navsat_transform_node" name="gps_filtered" clear_params="true">
-    <remap from="/gps/fix" to="/gps_status" />
-    <remap from="/odometry/gps" to="/dummy/gps" />
-</node>
-</launch>
