@@ -20,24 +20,19 @@
   <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
         args="jaguar_joint_publisher jaguar_velocity_controller --shutdown-timeout 3" output="screen"/>
 
-  <!-- Start EKF for localization -->
-<!--   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+  <!-- Start EKF for localization (Imu - Zed - Jaguar odom) -->
+
+<!--    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
   <rosparam command="load" file="$(find jaguar_control)/config/localization.yaml" />
-</node>
--->
+  </node> -->
 
-<rosparam command="load" file="$(find jaguar_control)/config/ekf_localization.yaml" />
+  <!--Start outdoor EKF localization (GPS-IMU-Zed-Jaguar odom)-->
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_odom" clear_params="true"/>
+  <include file="$(find jaguar_control)/launch/gps_transform.launch" />
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
-    <remap from="odometry/filtered" to="odometry/filtered_map" />
+   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+  <rosparam command="load" file="$(find jaguar_control)/config/outdoor_localization.yaml" />
   </node>
-
-  <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true">
-    <remap from="/gps/fix" to="/gps/filtered" />
-    <remap from="odometry/filtered" to="odometry/filtered_map" />
-</node>
 
 <!--
   <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
